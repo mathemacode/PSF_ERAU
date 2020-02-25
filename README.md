@@ -20,10 +20,11 @@
  ## Plan
  1. Check column name consistency, fix if needed
  2. Make all participant files same format (including adding empty columns)
- 3. Make cases files same format
- 4. Merge together and add indexes to placements files
- 5. Merge together and add indexes to removals files
- 6. Upload all into Postgres DB
+ 3. Merge participants files (pending 2018 fixes)
+ 4. Make cases files same format
+ 5. Merge together and add indexes to placements files
+ 6. Merge together and add indexes to removals files
+ 7. Upload all into Postgres DB
  
  ## Entity-Relationship Diagram
  I will be adding a RemovalID and PlacementID to use as Primary Keys to this database design.
