@@ -18,7 +18,7 @@
  - Queries to validate data
  
  ## Entity-Relationship Diagram
- I will not be editing the format of this database, as it's given to me in this format and thus would
- require much unnecessary effort to make adjustments.  I have made this ERD specifically for Postgres 
- implementation.
+ I will be adding a RemovalID and PlacementID to use as Primary Keys to this database design.
+ I have made this ERD specifically for Postgres implementation.  The structure is otherwise unchanged
+ from how it is provided.
  ![ERD](./docs/PSF_ERD.png)
