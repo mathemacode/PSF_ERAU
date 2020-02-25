@@ -17,6 +17,14 @@
  - Indexes if needed
  - Queries to validate data
  
+ ## Plan
+ 1. Check column name consistency, fix if needed
+ 2. Make all participant files same format (including adding empty columns)
+ 3. Make cases files same format
+ 4. Merge together and add indexes to placements files
+ 5. Merge together and add indexes to removals files
+ 6. Upload all into Postgres DB
+ 
  ## Entity-Relationship Diagram
  I will be adding a RemovalID and PlacementID to use as Primary Keys to this database design.
  I have made this ERD specifically for Postgres implementation.  The structure is otherwise unchanged
