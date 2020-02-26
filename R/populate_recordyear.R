@@ -23,7 +23,7 @@ AllParticipants = data.frame(InternalCaseID=NA,IdentificationID=NA,RecordYear=NA
 path = "~/GitHub/PSF_ERAU/data/xlsx_reviewed/participants"
 
 # Path to export csv of concatenated participants file
-exportpath = "~/GitHub/PSF_ERAU/data/csv_with_years"
+exportpath = "~/GitHub/PSF_ERAU/data/csv"
 
 # Loop to make RecordYear column in each Participant file
 for (filename in list.files(path = path)) {
