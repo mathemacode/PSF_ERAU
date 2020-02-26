@@ -11,19 +11,18 @@
  take on this project.
  
  ## TODO
- - Ingest into PGAdmin PostgreSQL database
- - Build all relationships (PK, FK), Indexes if needed
- - Queries to validate data
+ - [DONE] Ingest into PGAdmin PostgreSQL database
+ - [DONE] Queries to validate data
  - Data cleaning with R and then re-ingest?  Plan for this?
  
- ## Plan
+ ## Initial Plan
  1. [DONE] Check column name consistency, fix if needed
  2. [DONE] Make all participant files same format (including adding empty columns)
  3. [DONE] Merge participants files (pending 2018 fixes - currently missing 2018)
  4. [DONE] Make cases files same format
  5. [DONE] Merge together and add indexes to placements files
  6. [DONE] Merge together and add indexes to removals files
- 7. Upload all into Postgres DB
+ 7. [DONE] Upload all into Postgres DB
  
  ## Entity-Relationship Diagram
  I will be adding a RemovalID and PlacementID to use as Primary Keys to this database design.  I also
