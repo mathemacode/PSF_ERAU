@@ -1,4 +1,9 @@
 # Combine Removals files, export as csv
+#
+# I already created the indexes on the removals files,
+# if this has not been done, set row.names=TRUE in write.csv 
+# line
+#
 
 library(readxl)
 
