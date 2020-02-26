@@ -39,3 +39,4 @@ vignettes/*.pdf
 *.knit.md
 R/R.Rproj
 *.xlsx
+*.csv
