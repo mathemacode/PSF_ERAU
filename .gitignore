@@ -40,3 +40,4 @@ vignettes/*.pdf
 R/R.Rproj
 *.xlsx
 *.csv
+/data
