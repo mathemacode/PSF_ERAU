@@ -11,23 +11,22 @@
  take on this project.
  
  ## TODO
- - Concat files in R (or other method?)
  - Ingest into PGAdmin PostgreSQL database
- - Build all relationships (PK, FK)
- - Indexes if needed
+ - Build all relationships (PK, FK), Indexes if needed
  - Queries to validate data
+ - Data cleaning with R and then re-ingest?  Plan for this?
  
  ## Plan
- 1. Check column name consistency, fix if needed
- 2. Make all participant files same format (including adding empty columns)
- 3. Merge participants files (pending 2018 fixes)
- 4. Make cases files same format
- 5. Merge together and add indexes to placements files
- 6. Merge together and add indexes to removals files
+ 1. [DONE] Check column name consistency, fix if needed
+ 2. [DONE] Make all participant files same format (including adding empty columns)
+ 3. [DONE] Merge participants files (pending 2018 fixes - currently missing 2018)
+ 4. [DONE] Make cases files same format
+ 5. [DONE] Merge together and add indexes to placements files
+ 6. [DONE] Merge together and add indexes to removals files
  7. Upload all into Postgres DB
  
  ## Entity-Relationship Diagram
- I will be adding a RemovalID and PlacementID to use as Primary Keys to this database design.
- I have made this ERD specifically for Postgres implementation.  The structure is otherwise unchanged
- from how it is provided.
+ I will be adding a RemovalID and PlacementID to use as Primary Keys to this database design.  I also
+ added a "RecordYear" column to the Participants files. I have made this ERD specifically for Postgres 
+ implementation.  The structure is otherwise unchanged from how it is provided.
  ![ERD](./docs/PSF_ERD.png)
