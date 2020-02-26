@@ -51,7 +51,7 @@ for (filename in list.files(path = path)) {
   
 }
 
-write.csv(AllParticipants, paste0(exportpath,'/','All_Participants.csv'), row.names = FALSE)
+write.csv(AllParticipants, paste0(exportpath,'/','All_Participants.csv'), row.names = TRUE)
 
 # Clean up R Studio
 remove(path, exportpath, filename, year, df)
