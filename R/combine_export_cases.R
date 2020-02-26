@@ -26,7 +26,8 @@ for (filename in list.files(path = path)) {
   
 }
 
-write.csv(AllCases, paste0(exportpath,'/','All_Cases.csv'), row.names = FALSE)
+AllCases$Zip[AllCases$Zip == '#MULTIVALUE'] <- NA
+write.csv(AllCases, paste0(exportpath,'/','All_Cases.csv'), row.names = TRUE)
 
 # Clean up R Studio
 remove(path, exportpath, filename, df)
