@@ -9,17 +9,19 @@ DROP TABLE PLACEMENTS CASCADE;
 
 -- Create tables
 CREATE TABLE CASES (
-	  "InternalCaseID" NUMERIC PRIMARY KEY NOT NULL,
-	  "CaseType" VARCHAR(50),
-	  "Region" VARCHAR(50) NULL,
-	  "CaseOpenDate" DATE,
-	  "CaseCloseDate" DATE NULL,
-	  "Zip" CHAR(5)
+	"CaseID" INTEGER PRIMARY KEY NOT NULL,
+	"InternalCaseID" NUMERIC,
+	"CaseType" VARCHAR(50),
+	"Region" VARCHAR(50) NULL,
+	"CaseOpenDate" DATE,
+	"CaseCloseDate" DATE NULL,
+	"Zip" VARCHAR(5)
 );
 
 CREATE TABLE PARTICIPANTS (
+	"ParticipantID" INTEGER PRIMARY KEY NOT NULL,
 	"InternalCaseID" NUMERIC NOT NULL,
-	"IdentificationID" NUMERIC PRIMARY KEY NOT NULL,
+	"IdentificationID" NUMERIC,
 	"RecordYear" INTEGER,
 	"Gender" VARCHAR(7),
 	"Ethnicity" VARCHAR(50),
@@ -80,10 +82,10 @@ CREATE TABLE PLACEMENTS (
 
 
 -- Import data from .csv files
-COPY CASES FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Cases.csv' (FORMAT CSV, DELIMITER(','), HEADER);
-COPY PARTICIPANTS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Participants.csv' (FORMAT CSV, DELIMITER(','), HEADER);
-COPY REMOVALS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Removals.csv' (FORMAT CSV, DELIMITER(','), HEADER);
-COPY PLACEMENTS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Placements.csv' (FORMAT CSV, DELIMITER(','), HEADER);
+COPY CASES FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Cases.csv' (FORMAT CSV, DELIMITER(','), NULL 'NA', HEADER);
+COPY PARTICIPANTS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Participants.csv' (FORMAT CSV, DELIMITER(','), NULL 'NA', HEADER);
+COPY REMOVALS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Removals.csv' (FORMAT CSV, DELIMITER(','), NULL 'NA', HEADER);
+COPY PLACEMENTS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Placements.csv' (FORMAT CSV, DELIMITER(','), NULL 'NA', HEADER);
 
 
 -- Foreign keys
