@@ -51,7 +51,12 @@ for (filename in list.files(path = path)) {
   
 }
 
+# Find duplicate people
+AP <- AllParticipants
+duplicates <- AP[AP$IdentificationID %in% AP$IdentificationID[duplicated(AP$IdentificationID)],]
+
+
 write.csv(AllParticipants, paste0(exportpath,'/','All_Participants.csv'), row.names = TRUE)
 
 # Clean up R Studio
-remove(path, exportpath, filename, year, df)
+remove(path, exportpath, filename, year, df, AP, duplicates)
