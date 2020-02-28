@@ -87,30 +87,3 @@ COPY PARTICIPANTS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Par
 COPY REMOVALS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Removals.csv' (FORMAT CSV, DELIMITER(','), NULL 'NA', HEADER);
 COPY PLACEMENTS FROM 'C:/Users/dell/Documents/GitHub/PSF_ERAU/data/csv/All_Placements.csv' (FORMAT CSV, DELIMITER(','), NULL 'NA', HEADER);
 
-
--- Foreign keys
-ALTER TABLE PARTICIPANTS
-ADD CONSTRAINT fk_caseid
-FOREIGN KEY (InternalCaseID)
-REFERENCES CASES(InternalCaseID);
-
-ALTER TABLE REMOVALS
-ADD CONSTRAINT fk_caseid
-FOREIGN KEY (InternalCaseID)
-REFERENCES CASES(InternalCaseID);
-
-ALTER TABLE PLACEMENTS
-ADD CONSTRAINT fk_caseid
-FOREIGN KEY (InternalCaseID)
-REFERENCES CASES(InternalCaseID);
-
-ALTER TABLE REMOVALS
-ADD CONSTRAINT fk_identid
-FOREIGN KEY (IdentificationID)
-REFERENCES PARTICIPANTS(IdentificationID);
-
-ALTER TABLE PLACEMENTS
-ADD CONSTRAINT fk_identid
-FOREIGN KEY (IdentificationID)
-REFERENCES PARTICIPANTS(IdentificationID);
-
