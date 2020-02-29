@@ -31,7 +31,12 @@ for (filename in list.files(path = path)) {
   
 }
 
+# Remove rows with InternalCaseID's that are NOT IN Cases
+AllRemovals_inCases <- filter(AllRemovals, AllRemovals$InternalCaseID %in% AllCasesUQ$InternalCaseID)
+
+# Write to csv
 write.csv(AllRemovals, paste0(exportpath,'/','All_Removals.csv'), row.names = FALSE)
+
 
 # Clean up R Studio
 remove(path, exportpath, filename, df)
