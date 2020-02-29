@@ -33,6 +33,7 @@ AllCases$Zip[AllCases$Zip == '#MULTIVALUE'] <- NA
 df <- data.frame(AllCases)
 PK <- 'InternalCaseID'
 
+duplicates <- df[df[, c(PK)] %in% df[, c(PK)][duplicated(df[, c(PK)])],]
 AllCasesUQ <- df[!(df[, c(PK)] %in% df[, c(PK)][duplicated(df[, c(PK)])]),]
 
 # Write to csv file
