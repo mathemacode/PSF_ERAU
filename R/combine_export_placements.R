@@ -6,6 +6,7 @@
 #
 
 library(readxl)
+library(dplyr)
 
 # Create empty dataframe
 AllPlacements = data.frame(PlacementID=NA,InternalCaseID=NA,IdentificationID=NA,RemovalDate=NA,PlacementBeginDate=NA,
@@ -37,7 +38,7 @@ for (filename in list.files(path = path)) {
 AllPlacements_inCases <- filter(AllPlacements, AllPlacements$InternalCaseID %in% AllCasesUQ$InternalCaseID)
 
 # Write to csv
-write.csv(AllPlacements, paste0(exportpath,'/','All_Placements.csv'), row.names = FALSE)
+write.csv(AllPlacements_inCases, paste0(exportpath,'/','All_Placements.csv'), row.names = FALSE)
 
 # Clean up R Studio
 remove(path, exportpath, filename, df)

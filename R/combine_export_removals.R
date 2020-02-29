@@ -6,6 +6,7 @@
 #
 
 library(readxl)
+library(dplyr)
 
 # Create empty dataframe
 AllRemovals = data.frame(RemovalID=NA,InternalCaseID=NA,IdentificationID=NA,
@@ -35,7 +36,7 @@ for (filename in list.files(path = path)) {
 AllRemovals_inCases <- filter(AllRemovals, AllRemovals$InternalCaseID %in% AllCasesUQ$InternalCaseID)
 
 # Write to csv
-write.csv(AllRemovals, paste0(exportpath,'/','All_Removals.csv'), row.names = FALSE)
+write.csv(AllRemovals_inCases, paste0(exportpath,'/','All_Removals.csv'), row.names = FALSE)
 
 
 # Clean up R Studio
