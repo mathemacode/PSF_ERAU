@@ -6,12 +6,8 @@ library(dplyr)
 # Path to export csv of concatenated participants file
 exportpath = "~/GitHub/PSF_ERAU/data/csv"
 
-# For AllCases, added 1 to InternalCaseID if Region not blank
-# For AllParticipants, added 1 to InternalCaseID if in 2017_2, 2018, or 2019
-# For AllRemovals, added 1 to InternalCaseID if in _2 file
-# For AllPlacements, added 1 to InternalCaseID if in _2 file
-
-# Redo ingestion from addone folder
+# Need to add surrogate keys for unique set of values per each df
+# Swap these with current index?
 
 
 # merge_cases_removals <- 
