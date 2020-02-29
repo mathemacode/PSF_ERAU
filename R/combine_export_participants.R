@@ -33,7 +33,7 @@ for (filename in list.files(path = path)) {
   year <- as.integer(str_sub(regmatches(filename, regexpr("[0-9].*[0-9]", filename)), end=4)) 
   
   # Read all files, set column names
-  df <- read_excel(paste0(path, '/', filename),
+  df <- read_xlsx(paste0(path, '/', filename),
                    col_names = c("InternalCaseID","IdentificationID","RecordYear","Gender","Ethnicity",
                                  "Hispanic","MonthOfBirth","AdoptionFlag","ServiceRole","LegalStatus",
                                  "MaltreaterFlag","FatherTPRFlag","MotherTPRFlag","ResidesAtHomeFlag",
