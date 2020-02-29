@@ -42,7 +42,10 @@ for (filename in list.files(path = path)) {
                                  "EmotionallyDisturbedFlag","SpecialCareFlag","RelinquishmentFlag",
                                  "AutismFlag","OrganicBrainDamageFlag","CerebralPalsyFlag","PhysicalBDamageFlag",
                                  "DeafnessFlag","PhysLimitFlag","EmotionalDisFlag","PraderFlag","InfirmitiesFlag",
-                                 "RetardationFlag","MentalIllnessFlag","SpinaFlag","MentalLimitationsFlag"),skip=1)
+                                 "RetardationFlag","MentalIllnessFlag","SpinaFlag","MentalLimitationsFlag"))
+  
+  # Remove column names - must be done here, not in read_xslx (bug fix)
+  df <- df[-1,]
   
   # Set RecordYear as the year in filename
   df$RecordYear = year
