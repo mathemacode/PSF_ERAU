@@ -26,8 +26,17 @@ for (filename in list.files(path = path)) {
   
 }
 
+# Change #MULTIVALUE to NA
 AllCases$Zip[AllCases$Zip == '#MULTIVALUE'] <- NA
-write.csv(AllCases, paste0(exportpath,'/','All_Cases.csv'), row.names = TRUE)
+
+# Remove duplicate values
+df <- data.frame(AllCases)
+PK <- 'InternalCaseID'
+
+AllCasesUQ <- df[!(df[, c(PK)] %in% df[, c(PK)][duplicated(df[, c(PK)])]),]
+
+# Write to csv file
+write.csv(AllCasesUQ, paste0(exportpath,'/','All_Cases.csv'), row.names = FALSE)
 
 # Clean up R Studio
-remove(path, exportpath, filename, df)
+remove(path, exportpath, filename, df, PK)
