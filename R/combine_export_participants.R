@@ -7,6 +7,7 @@
 
 library(readxl)
 library(stringr)
+library(dplyr)
 
 # Create empty dataframe
 AllParticipants = data.frame(InternalCaseID=NA,IdentificationID=NA,RecordYear=NA,Gender=NA,Ethnicity=NA,
@@ -52,11 +53,14 @@ for (filename in list.files(path = path)) {
 }
 
 # Find duplicate people
-AP <- AllParticipants
-duplicates <- AP[AP$IdentificationID %in% AP$IdentificationID[duplicated(AP$IdentificationID)],]
+# AP <- AllParticipants
+# duplicates <- AP[AP$IdentificationID %in% AP$IdentificationID[duplicated(AP$IdentificationID)],]
 
+# Remove rows with InternalCaseID's that are NOT IN Cases
+AllParticipants_inCases <- filter(AllParticipants, AllParticipants$InternalCaseID %in% AllCasesUQ$InternalCaseID)
 
-write.csv(AllParticipants, paste0(exportpath,'/','All_Participants.csv'), row.names = TRUE)
+# Write to csv
+write.csv(AllParticipants_inCases, paste0(exportpath,'/','All_Participants.csv'), row.names = TRUE)
 
 # Clean up R Studio
-remove(path, exportpath, filename, year, df, AP, duplicates)
+remove(path, exportpath, filename, year, df, AP, duplicates, PK)
