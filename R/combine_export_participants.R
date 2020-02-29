@@ -34,15 +34,7 @@ for (filename in list.files(path = path)) {
   
   # Read all files, set column names
   df <- read_xlsx(paste0(path, '/', filename),
-                   col_names = c("InternalCaseID","IdentificationID","RecordYear","Gender","Ethnicity",
-                                 "Hispanic","MonthOfBirth","AdoptionFlag","ServiceRole","LegalStatus",
-                                 "MaltreaterFlag","FatherTPRFlag","MotherTPRFlag","ResidesAtHomeFlag",
-                                 "TeenParentFlag","AbandonedFlag","ClinicallyDiagnosedFlag",
-                                 "MentalRetardationFlag","PhysicallyDisabledFlag","VHImpairedFlag",
-                                 "EmotionallyDisturbedFlag","SpecialCareFlag","RelinquishmentFlag",
-                                 "AutismFlag","OrganicBrainDamageFlag","CerebralPalsyFlag","PhysicalBDamageFlag",
-                                 "DeafnessFlag","PhysLimitFlag","EmotionalDisFlag","PraderFlag","InfirmitiesFlag",
-                                 "RetardationFlag","MentalIllnessFlag","SpinaFlag","MentalLimitationsFlag"))
+                   col_names = c(names(AllParticipants)))
   
   # Remove column names - must be done here, not in read_xslx (bug fix)
   df <- df[-1,]
@@ -66,4 +58,4 @@ AllParticipants_inCases <- filter(AllParticipants, AllParticipants$InternalCaseI
 write.csv(AllParticipants_inCases, paste0(exportpath,'/','All_Participants.csv'), row.names = TRUE)
 
 # Clean up R Studio
-remove(path, exportpath, filename, year, df, AP, duplicates, PK)
+remove(path, exportpath, filename, year, df)
