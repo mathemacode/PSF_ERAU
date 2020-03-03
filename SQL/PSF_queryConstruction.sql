@@ -6,6 +6,14 @@ FROM PARTICIPANTS
 GROUP BY IdentificationID
 ORDER BY NumCases DESC;
 
+-- Find number of cases particular IdentificationID appears in
+-- With added info
+SELECT IdentificationID, Gender, Ethnicity, COUNT(InternalCaseID) AS NumCases
+FROM PARTICIPANTS
+WHERE Ethnicity IS NOT NULL
+GROUP BY IdentificationID, Gender, Ethnicity
+ORDER BY NumCases DESC;
+
 -- Find number of cases per CHILD
 SELECT IdentificationID, COUNT(InternalCaseID) AS NumCases_Child
 FROM PARTICIPANTS
