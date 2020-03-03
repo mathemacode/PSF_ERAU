@@ -12,7 +12,7 @@ LIMIT 100;
 SELECT * FROM REMOVALS
 LIMIT 100;
 
-SELECT CASES.INTERNALCASEID, ParticipantID, RecordYear, Gender, CASES.INTERNALCASEID, 
+SELECT CASES.INTERNALCASEID, ParticipantID, RecordYear, Gender,
 		CASEOPENDATE, CASECLOSEDATE, AdoptionFlag, RemovalManner, 
 		Service, EpisodeType, PlacementSetting, EndingPurpose,
 		EndReason
