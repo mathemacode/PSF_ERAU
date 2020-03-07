@@ -1,6 +1,6 @@
 -- How many children have X number of cases?
 with CTE_caseNum AS (
-	SELECT IdentificationID, COUNT(InternalCaseID) AS NumCases_Child
+	SELECT IdentificationID, COUNT(DISTINCT(InternalCaseID)) AS NumCases_Child
 	FROM PARTICIPANTS
 	WHERE ServiceRole IN('Child', 'Child Receiving Services')
 	GROUP BY IdentificationID
