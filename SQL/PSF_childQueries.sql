@@ -1,4 +1,4 @@
--- How many children have X number of cases?
+-- How many children have X number of CASES?
 with CTE_caseNum AS (
 	SELECT IdentificationID, COUNT(DISTINCT(InternalCaseID)) AS NumCases_Child
 	FROM PARTICIPANTS
@@ -9,11 +9,22 @@ with CTE_caseNum AS (
 SELECT COUNT(*) FROM CTE_caseNum
 WHERE NumCases_Child >= 2;
 
+-- How many children have X number of REMOVALS?
+with CTE_caseRemovals AS (
+	SELECT PARTICIPANTS.IdentificationID, COUNT(DISTINCT(RemovalDate)) AS NumRemovals
+	FROM PARTICIPANTS
+	INNER JOIN REMOVALS USING(InternalCaseID)
+	WHERE ServiceRole IN('Child', 'Child Receiving Services')
+	GROUP BY PARTICIPANTS.IdentificationID
+	ORDER BY NumRemovals DESC
+)
+SELECT COUNT(*) FROM CTE_caseRemovals
+WHERE NumRemovals >= 2;
 
--- Removal, Placment Begin/End Dates for each CaseID & Child IdentificationID
+-- Removal, Placement Begin/End Dates for each CaseID & Child IdentificationID
 SELECT InternalCaseID, PARTICIPANTS.IdentificationID, RemovalDate, PlacementBegin, PlacementEnd
 FROM PARTICIPANTS
 INNER JOIN PLACEMENTS USING (InternalCaseID)
 WHERE ServiceRole IN('Child', 'Child Receiving Services')
-GROUP BY RecordYear, InternalCaseID, PARTICIPANTS.IdentificationID, RemovalDate, PlacementBegin, PlacementEnd
+GROUP BY InternalCaseID, PARTICIPANTS.IdentificationID, RemovalDate, PlacementBegin, PlacementEnd
 ORDER BY IdentificationID, RemovalDate DESC;
