@@ -22,9 +22,9 @@ SELECT COUNT(*) FROM CTE_caseRemovals
 WHERE NumRemovals >= 2;
 
 -- Removal, Placement Begin/End Dates for each CaseID & Child IdentificationID
-SELECT InternalCaseID, PARTICIPANTS.IdentificationID, RemovalDate, PlacementBegin, PlacementEnd
+SELECT InternalCaseID, PARTICIPANTS.IdentificationID, PlacementID, RemovalDate, PlacementBegin, PlacementEnd, PlacementSetting, EndReason
 FROM PARTICIPANTS
 INNER JOIN PLACEMENTS USING (InternalCaseID)
 WHERE ServiceRole IN('Child', 'Child Receiving Services')
-GROUP BY InternalCaseID, PARTICIPANTS.IdentificationID, RemovalDate, PlacementBegin, PlacementEnd
-ORDER BY IdentificationID, RemovalDate DESC;
+GROUP BY InternalCaseID, PARTICIPANTS.IdentificationID, RemovalDate, PlacementID, PlacementBegin, PlacementEnd, PlacementSetting, EndReason
+ORDER BY IdentificationID, PARTICIPANTS.IdentificationID, PlacementID DESC, RemovalDate DESC;
