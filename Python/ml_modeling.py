@@ -13,6 +13,8 @@ Data file built in ./R/all_numbers_merge_data.R
 
 import pandas as pd
 import shap
+import eli5
+from eli5.sklearn import PermutationImportance
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
@@ -54,7 +56,8 @@ xg_predictions = xg_model.predict(val_X)
 print("\nXGBoost Mean Absolute Error: \n",
       str(mean_absolute_error(xg_predictions, val_y)))
 
-             
+perm = PermutationImportance(xg_model, random_state=1).fit(val_X, val_y)
+eli5.show_weights(perm, feature_names = val_X.columns.tolist())
 
 
 
