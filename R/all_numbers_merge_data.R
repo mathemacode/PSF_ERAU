@@ -208,4 +208,4 @@ ML_frame <- ML_frame[complete.cases(ML_frame),]
 summary_df <- stat.desc(ML_frame)
 
 # Write to file
-write.csv(ML_frame, "GitHub/PSF_ERAU/data/ml/ML_frame.csv")
+write.csv(ML_frame, "GitHub/PSF_ERAU/data/ml/ML_frame.csv", row.names=FALSE)
