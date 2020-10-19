@@ -1,19 +1,100 @@
+#
+# This program was edited from the original for new PSF_ERAU repo.
+#
 # This program creates the dataframe "all_numbers"
 # which can be used for machine learning.  It is designed
 # to have as much information as possible, WITHOUT ANY NA'S
 # in order to make the machine learning programs as 
 # accurate as possible.
-
-# Data is pulled from these dfs:
-#       ALL_PARTICIPANTS (2010-2017 merged together, LONG)
-#       case_rem_place
-#       cases
-#       crime
 #
 # Columns of all_numbers are filled with the appropriate data
 # per each case, zip code, or other factor that aligns with info
 
 library(dplyr)
+library(readr)
+
+# Import data from csv files - use combine__.R scripts before running this file
+# ========================================================================================#
+
+All_Cases <- read_csv("GitHub/PSF_ERAU/data/csv/All_Cases.csv", 
+                      col_types = cols(
+                        InternalCaseID = col_double(),
+                        CaseClosedDate = col_date(format = "%Y-%m-%d %H:%M:%S"),
+                        CaseOpenDate = col_date(format = "%Y-%m-%d %H:%M:%S"),
+                        CaseType = col_character(), InternalCaseID = col_integer(),
+                        Region = col_character(), Zip = col_integer()), 
+                      na = "NA")
+
+
+All_Participants <- read_csv("GitHub/PSF_ERAU/data/csv/All_Participants.csv", 
+                              col_types = cols(
+                                AbandonedFlag = col_factor(levels = c("Y", "N")), 
+                                AdoptionFlag = col_factor(levels = c("Y", "N")), 
+                                AutismFlag = col_factor(levels = c("Y", "N")), 
+                                CerebralPalsyFlag = col_factor(levels = c("Y", "N")), 
+                                ClinicallyDiagnosedFlag = col_factor(levels = c("Y", "A","N")), 
+                                DeafnessFlag = col_factor(levels = c("Y", "N")), 
+                                EmotionalDisFlag = col_factor(levels = c("Y", "N")), 
+                                EmotionallyDisturbedFlag = col_factor(levels = c("Y", "N")), 
+                                Ethnicity = col_character(), 
+                                FatherTPRFlag = col_factor(levels = c("Y", "N")),
+                                Gender = col_factor(levels = c("Male", "Unknown", "Female")), 
+                                Hispanic = col_character(), 
+                                IdentificationID = col_double(), 
+                                InfirmitiesFlag = col_factor(levels = c("Y", "N")), 
+                                InternalCaseID = col_double(), 
+                                LegalStatus = col_character(), 
+                                MaltreaterFlag = col_factor(levels = c("Y", "N")), 
+                                MentalIllnessFlag = col_factor(levels = c("Y", "N")), 
+                                MentalLimitationsFlag = col_factor(levels = c("Y", "N")),
+                                MentalRetardationFlag = col_factor(levels = c("Y", "N")), 
+                                MonthOfBirth = col_date(format = "%m/%Y"), 
+                                MotherTPRFlag = col_factor(levels = c("Y", "N")), 
+                                OrganicBrainDamageFlag = col_factor(levels = c("Y", "N")), 
+                                PhysLimitFlag = col_factor(levels = c("Y", "N")), 
+                                PhysicalBDamageFlag = col_factor(levels = c("Y", "N")), 
+                                PhysicallyDisabledFlag = col_factor(levels = c("Y", "N")), 
+                                PraderFlag = col_factor(levels = c("Y", "N")), 
+                                RecordYear = col_double(), 
+                                RelinquishmentFlag = col_factor(levels = c("Y", "N")),
+                                ResidesAtHomeFlag = col_factor(levels = c("Y", "N")), 
+                                RetardationFlag = col_factor(levels = c("Y", "N")), 
+                                ServiceRole = col_character(), 
+                                SpecialCareFlag = col_factor(levels = c("Y", "N")), 
+                                SpinaFlag = col_factor(levels = c("Y", "N")), 
+                                TeenParentFlag = col_factor(levels = c("Y", "N")), 
+                                VHImpairedFlag = col_factor(levels = c("Y", "N")), 
+                                X1 = col_double()), 
+                             na = "NA")
+
+
+All_Placements <- read_csv("GitHub/PSF_ERAU/data/csv/All_Placements.csv", 
+                           col_types = cols(
+                              EndReason = col_character(), 
+                              EndingPurpose = col_character(), 
+                              EpisodeType = col_character(), 
+                              IdentificationID = col_double(), 
+                              InternalCaseID = col_double(), 
+                              PlacementBeginDate = col_date(format = "%Y-%m-%d"), 
+                              PlacementEndDate = col_date(format = "%Y-%m-%d"), 
+                              PlacementID = col_double(), 
+                              PlacementSetting = col_character(), 
+                              RemovalDate = col_date(format = "%Y-%m-%d"), 
+                              Service = col_character()),
+                           na = "NA")
+
+
+All_Removals <- read_csv("GitHub/PSF_ERAU/data/csv/All_Removals.csv", 
+                         col_types = cols(
+                          IdentificationID = col_double(), 
+                          InternalCaseID = col_double(), 
+                          RemovalDate = col_date(format = "%Y-%m-%d"), 
+                          RemovalID = col_double(), 
+                          RemovalManner = col_character()), 
+                        na = "NA")
+
+
+
 cases_relevant <- filter(cases, cases$`InternalCaseID` %in% case_rem_place$`InternalCaseID`)
 
 # ===================================================================================
