@@ -17,20 +17,23 @@ import eli5
 import os
 from eli5.sklearn import PermutationImportance
 from sklearn.ensemble import RandomForestRegressor
+import xgboost as xgb
+from sklearn.ensemble import RandomForestClassifier
 from sklearn import preprocessing
 from sklearn.metrics import mean_absolute_error
-from sklearn.neural_network import MLPRegressor
-from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
+from sklearn.neural_network import MLPClassifier
+from sklearn.datasets import make_classification
 from xgboost import XGBRegressor
+
 
 os.getcwd()
 os.chdir("C:\\Users\\dell\\Documents\\GitHub\\PSF_ERAU")
 
 # Import data
 df = pd.read_csv('./data/ml/ML_frame.csv')
-details = df.describe()
-details_nocount = details.iloc[1:]
+#df.head()
+
 
 # Normalize df
 min_max_scaler = preprocessing.MinMaxScaler()
@@ -38,6 +41,13 @@ np_scaled = min_max_scaler.fit_transform(df)
 df_norm = pd.DataFrame(np_scaled)
 
 df_norm.columns = df.columns
+df_norm.head()
+
+details = df.describe()
+details_nocount = details.iloc[1:]
+#details
+
+#============================================================================#
 
 # Use these rows for prediction:
 features = ['zip', 'zip_count', 'number_participants',
@@ -47,23 +57,28 @@ features = ['zip', 'zip_count', 'number_participants',
 X = df_norm[features]
 
 # What to predict:
-y = df_norm.number_removals
+y = df_norm.multiple_removals
 
 # Train/test split
 train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0)
 
 
+# ============================================================================#
 # Random Forest
-rf_model = RandomForestRegressor(random_state=1)
+rf_model = RandomForestClassifier(random_state=1)
 rf_model.fit(train_X, train_y)
 
 rf_predictions = rf_model.predict(val_X)
 print("\nRandom Forest Mean Absolute Error: \n", 
       mean_absolute_error(val_y, rf_predictions))
 
+perm = PermutationImportance(rf_model, random_state=1).fit(val_X, val_y)
+eli5.show_weights(perm, feature_names = val_X.columns.tolist())
 
+
+#============================================================================#
 # XGBoost
-xg_model = XGBRegressor(n_estimators=500, learning_rate=0.05)
+xg_model = xgb.XGBClassifier(n_estimators=500, learning_rate=0.05)
 xg_model.fit(train_X, train_y,
              early_stopping_rounds=5, 
              eval_set=[(val_X, val_y)], 
@@ -77,11 +92,24 @@ perm = PermutationImportance(xg_model, random_state=1).fit(val_X, val_y)
 eli5.show_weights(perm, feature_names = val_X.columns.tolist())
 
 
+#============================================================================#
 # Neural Network
-X, y = make_regression(n_samples=200, random_state=1)
-regr = MLPRegressor(random_state=1, max_iter=500).fit(train_X, train_y)
-regr.score(val_X, val_y)
-regr.predict(val_X[:3])
+X, y = make_classification(n_samples=200, random_state=1)
+
+NN = MLPClassifier(random_state=1, max_iter=500).fit(train_X, train_y)
+
+NN_predictions = NN.predict(val_X)
+print("\nNeural Network Mean Absolute Error: \n",
+      str(mean_absolute_error(NN_predictions, val_y)))
+
+# regr.score(val_X, val_y)
+#regr.predict(val_X[:3])
+
+perm = PermutationImportance(NN, random_state=1).fit(val_X, val_y)
+eli5.show_weights(perm, feature_names = val_X.columns.tolist())
+
+
+#============================================================================#
 
 
 '''  # Figuring out SHAP values

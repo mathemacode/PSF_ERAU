@@ -121,7 +121,8 @@ ML_frame = data.frame(id = double(),
                       age_child = double(),
                       avg_age_caregiver = double(),
                       avg_gross_income_zip = double(),
-                      first_placement = integer(),
+                      first_placement = factor(levels=c("1", "2", "3")),
+                      multiple_removals = factor(levels=c("1", "0")),
                       stringsAsFactors=FALSE) 
 
 
@@ -143,7 +144,7 @@ children <- filter(participants, participants$ServiceRole == "Child")
 i <- 1
 for (id in unique(children$IdentificationID)){
   
-  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
   
   i = i+1
 }
@@ -217,6 +218,15 @@ for (id in ML_frame$id){
   }
   
   ML_frame[i, "first_placement"] <- fact
+  
+  
+  # Multiple removals factor
+  if (ML_frame[i, "number_removals"] > 1) {
+    ML_frame[i, "multiple_removals"] <- "1"
+  }
+  else {
+    ML_frame[i, "multiple_removals"] <- "0"
+  }
   
   
   i = i+1

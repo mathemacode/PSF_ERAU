@@ -48,11 +48,21 @@ NN = neuralnet(formula <- number_removals ~
                             case_duration_yrs + number_caregivers +
                             age_child + avg_age_caregiver +
                             avg_gross_income_zip,
-                          trainNN, hidden=c(9,2) , linear.output = TRUE )
+                          trainNN, hidden=c(9,2) , linear.output = FALSE )
 
 # plot neural network
 plot(NN)
 
+
+results <- data.frame(actual = trainNN$number_removals, prediction = NN$net.result)
+
+predicted=results[,2] * abs(diff(range(trainNN$number_removals))) + min(trainNN$number_removals)
+actual = results$actual * abs(diff(range(unlist(NN$net.result)))) + min(unlist(NN$net.result))
+comparison=data.frame(predicted,actual)
+deviation=((actual-predicted)/actual)
+comparison=data.frame(predicted,actual,deviation)
+accuracy=1-abs(mean(deviation))
+accuracy
 
 # ==================================================================
 ## Prediction using neural network
