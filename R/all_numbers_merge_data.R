@@ -121,6 +121,7 @@ ML_frame = data.frame(id = double(),
                       age_child = double(),
                       avg_age_caregiver = double(),
                       avg_gross_income_zip = double(),
+                      first_placement = integer(),
                       stringsAsFactors=FALSE) 
 
 
@@ -142,10 +143,11 @@ children <- filter(participants, participants$ServiceRole == "Child")
 i <- 1
 for (id in unique(children$IdentificationID)){
   
-  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
   
   i = i+1
 }
+
 
 # ===================================================================================
 
@@ -201,6 +203,21 @@ for (id in ML_frame$id){
   # Average income in zip code of case
   zip_income <- round(mean(filter(income, income$zipcode == zip_code)$`A00100`), 0)
   ML_frame[i, "avg_gross_income_zip"] <- zip_income
+  
+  # First case factor
+  first_case <- filter(placements, placements$IdentificationID == id)$Service[1]
+  if (isTRUE(first_case == "Relative Placement")) {
+    fact = 3
+  } 
+  else if (isTRUE(first_case == "Non-relative Placement")) {
+    fact = 2
+  }
+  else {
+    fact = 1
+  }
+  
+  ML_frame[i, "first_placement"] <- fact
+  
   
   i = i+1
 }

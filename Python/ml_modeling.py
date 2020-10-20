@@ -29,6 +29,8 @@ os.chdir("C:\\Users\\dell\\Documents\\GitHub\\PSF_ERAU")
 
 # Import data
 df = pd.read_csv('./data/ml/ML_frame.csv')
+details = df.describe()
+details_nocount = details.iloc[1:]
 
 # Normalize df
 min_max_scaler = preprocessing.MinMaxScaler()
@@ -41,7 +43,7 @@ df_norm.columns = df.columns
 features = ['zip', 'zip_count', 'number_participants',
             'case_duration_yrs', 'number_caregivers',
             'age_child', 'avg_age_caregiver',
-            'avg_gross_income_zip']
+            'avg_gross_income_zip', 'first_placement']
 X = df_norm[features]
 
 # What to predict:
@@ -80,6 +82,7 @@ X, y = make_regression(n_samples=200, random_state=1)
 regr = MLPRegressor(random_state=1, max_iter=500).fit(train_X, train_y)
 regr.score(val_X, val_y)
 regr.predict(val_X[:3])
+
 
 '''  # Figuring out SHAP values
 row_to_show = 5
