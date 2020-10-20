@@ -126,12 +126,19 @@ ML_frame = data.frame(id = double(),
                       stringsAsFactors=FALSE) 
 
 
+# Reduce data size down to only cases that have all details we need
 cases <- filter(All_Cases, All_Cases$`InternalCaseID` %in% All_Placements$`InternalCaseID`)
 cases <- filter(cases, !is.na(cases$Zip))
 participants <- filter(All_Participants, All_Participants$`InternalCaseID` %in% cases$`InternalCaseID`)
 removals <- filter(All_Removals, All_Removals$`InternalCaseID` %in% cases$`InternalCaseID`)
 placements <- filter(All_Placements, All_Placements$`InternalCaseID` %in% cases$`InternalCaseID`)
 income <- filter(IRS_Income, IRS_Income$STATE == "FL")
+
+# Sort so that I can easily find first/second case, person, placement etc
+cases <- as.data.frame(cases[order(cases$CaseOpenDate),])
+removals <- as.data.frame(removals[order(removals$RemovalDate),])
+placements <- as.data.frame(placements[order(placements$PlacementBeginDate),])
+participants <- as.data.frame(participants[order(participants$RecordYear, participants$InternalCaseID, participants$IdentificationID),])
 
 
 # ===================================================================================
@@ -167,7 +174,7 @@ for (id in ML_frame$id){
   ML_frame[i,"zip_count"] <- zip_count
   
   # Number of removals
-  num_removals <- length(unique((filter(removals, removals$IdentificationID == id)$RemovalDate)))
+  num_removals <- length(unique((filter(placements, placements$IdentificationID == id)$RemovalDate)))
   ML_frame[i,"number_removals"] <- num_removals
   
   # Number of placements
@@ -179,10 +186,15 @@ for (id in ML_frame$id){
   num_participants <- (length(unique(one_case$IdentificationID)) - 1)  # Note that other children may be included
   ML_frame[i,"number_participants"] <- num_participants
   
-  # Case Duration -- if this is "NA", it's probably still an open case
+  # Case Duration -- if this is "NA", it's probably still an open case, so use current date to find case duration thus far
   case_details <- filter(cases, cases$InternalCaseID == case_id_of_participant)
   duration <- as.double(case_details$CaseClosedDate - case_details$CaseOpenDate) / 365
   ML_frame[i,"case_duration_yrs"] <- round(duration,1)
+  
+  if (is.na(duration)) {
+    duration_sofar <- as.double(Sys.Date() - as.Date(case_details$CaseOpenDate)) / 365
+    ML_frame[i,"case_duration_yrs"] <- round(duration_sofar,1)
+  }
   
   # Number of Caregivers
   case_part <- filter(participants, participants$InternalCaseID == case_id_of_participant)
