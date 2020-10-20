@@ -121,7 +121,7 @@ ML_frame = data.frame(id = double(),
                       age_child = double(),
                       avg_age_caregiver = double(),
                       avg_gross_income_zip = double(),
-                      first_placement = factor(levels=c("1", "2", "3")),
+                      first_placement = factor(levels=c("1", "2", "3", "4")),
                       multiple_removals = factor(levels=c("1", "0")),
                       stringsAsFactors=FALSE) 
 
@@ -135,11 +135,10 @@ placements <- filter(All_Placements, All_Placements$`InternalCaseID` %in% cases$
 income <- filter(IRS_Income, IRS_Income$STATE == "FL")
 
 # Sort so that I can easily find first/second case, person, placement etc
-cases <- as.data.frame(cases[order(cases$CaseOpenDate),])
-removals <- as.data.frame(removals[order(removals$RemovalDate),])
-placements <- as.data.frame(placements[order(placements$PlacementBeginDate),])
-participants <- as.data.frame(participants[order(participants$RecordYear, participants$InternalCaseID, participants$IdentificationID),])
-
+cases <- data.frame(cases[order(cases$CaseOpenDate),])
+removals <- data.frame(removals[order(removals$RemovalDate),])
+placements <- data.frame(placements[order(placements$PlacementBeginDate),])
+participants <- data.frame(participants[order(participants$RecordYear, participants$InternalCaseID, participants$IdentificationID),])
 
 # ===================================================================================
 
@@ -219,7 +218,12 @@ for (id in ML_frame$id){
   
   # First case factor
   first_case <- filter(placements, placements$IdentificationID == id)$Service[1]
-  if (isTRUE(first_case == "Relative Placement")) {
+  first_place <- filter(placements, placements$IdentificationID == id)$PlacementSetting[1]
+  
+  if (isTRUE(first_place == "Pre-Adoptive Home")) {
+    fact = 4
+  }
+  else if (isTRUE(first_case == "Relative Placement")) {
     fact = 3
   } 
   else if (isTRUE(first_case == "Non-relative Placement")) {
