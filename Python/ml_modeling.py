@@ -19,6 +19,8 @@ from eli5.sklearn import PermutationImportance
 from sklearn.ensemble import RandomForestRegressor
 from sklearn import preprocessing
 from sklearn.metrics import mean_absolute_error
+from sklearn.neural_network import MLPRegressor
+from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
 
@@ -73,6 +75,11 @@ perm = PermutationImportance(xg_model, random_state=1).fit(val_X, val_y)
 eli5.show_weights(perm, feature_names = val_X.columns.tolist())
 
 
+# Neural Network
+X, y = make_regression(n_samples=200, random_state=1)
+regr = MLPRegressor(random_state=1, max_iter=500).fit(train_X, train_y)
+regr.score(val_X, val_y)
+regr.predict(val_X[:3])
 
 '''  # Figuring out SHAP values
 row_to_show = 5
