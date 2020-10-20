@@ -96,7 +96,7 @@ eli5.show_weights(perm, feature_names = val_X.columns.tolist())
 # Neural Network
 X, y = make_classification(n_samples=200, random_state=1)
 
-NN = MLPClassifier(random_state=1, max_iter=500).fit(train_X, train_y)
+NN = MLPClassifier(random_state=1, max_iter=2000).fit(train_X, train_y)
 
 NN_predictions = NN.predict(val_X)
 print("\nNeural Network Mean Absolute Error: \n",
