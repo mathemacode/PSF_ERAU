@@ -1,15 +1,12 @@
 # Neural Network Builder 
 # Also test accuracy at end
-
 # THIS CODE ADAPTED FROM ANALYTICS VIDHYA
-
-# IF YOU GET NON-NUMERIC ARGUMENT TO BINARY
-# all_numbers$`Identification ID` <- as.double(all_numbers$`Identification ID`)
 
 # IF YOU GET CBIND ERROR number of rows of result not multiple of vector length...
 # Means there are NA's in the column trying to built neural off of, subset for when columns NOT NA
 
 library(dplyr)
+library(caret)
 
 # Read the Data, filter if needed to get rid of outlier or NA cases
 data = ML_frame
@@ -31,7 +28,9 @@ datatest = data[ -index, ]
 max = apply(data , 2 , max)
 min = apply(data, 2 , min)
 
-scaled = as.data.frame(scale(data, center = min, scale = max - min))
+#scaled = as.data.frame(scale(data, center = min, scale = max - min))
+preproc <- preProcess(data, method=c("center", "scale"))
+scaled <- predict(preproc, data)
 
 # load neuralnet
 library(neuralnet)
@@ -43,20 +42,20 @@ testNN = scaled[-index , ]
 # Fit neural network
 # Choose characteristics
 set.seed(2)
-NN = neuralnet(formula <- number_removals ~ 
+NN = neuralnet(formula <- multiple_removals ~ 
                             zip + zip_count + number_participants +
                             case_duration_yrs + number_caregivers +
                             age_child + avg_age_caregiver +
                             avg_gross_income_zip,
-                          trainNN, hidden=c(9,2) , linear.output = FALSE )
+                          trainNN, hidden=c(7,2) , linear.output = FALSE )
 
 # plot neural network
 plot(NN)
 
 
-results <- data.frame(actual = trainNN$number_removals, prediction = NN$net.result)
+results <- data.frame(actual = trainNN$multiple_removals, prediction = NN$net.result)
 
-predicted=results[,2] * abs(diff(range(trainNN$number_removals))) + min(trainNN$number_removals)
+predicted=results[,2] * abs(diff(range(trainNN$multiple_removals))) + min(trainNN$multiple_removals)
 actual = results$actual * abs(diff(range(unlist(NN$net.result)))) + min(unlist(NN$net.result))
 comparison=data.frame(predicted,actual)
 deviation=((actual-predicted)/actual)
