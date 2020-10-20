@@ -103,6 +103,13 @@ All_Removals <- read_csv("GitHub/PSF_ERAU/data/csv/All_Removals.csv",
                         na = "NA")
 
 
+IRS_Income <- read_csv("GitHub/PSF_ERAU/data/irs/18zpallagi.csv", 
+                        col_types = cols(
+                          A00100 = col_double(), 
+                          STATE = col_character(), 
+                          zipcode = col_double()))
+
+
 ML_frame = data.frame(id = double(),
                       zip = integer(),
                       zip_count = integer(),
@@ -113,6 +120,7 @@ ML_frame = data.frame(id = double(),
                       number_caregivers = integer(),
                       age_child = double(),
                       avg_age_caregiver = double(),
+                      avg_gross_income_zip = double(),
                       stringsAsFactors=FALSE) 
 
 
@@ -121,6 +129,7 @@ cases <- filter(cases, !is.na(cases$Zip))
 participants <- filter(All_Participants, All_Participants$`InternalCaseID` %in% cases$`InternalCaseID`)
 removals <- filter(All_Removals, All_Removals$`InternalCaseID` %in% cases$`InternalCaseID`)
 placements <- filter(All_Placements, All_Placements$`InternalCaseID` %in% cases$`InternalCaseID`)
+income <- filter(IRS_Income, IRS_Income$STATE == "FL")
 
 
 # ===================================================================================
@@ -133,7 +142,7 @@ children <- filter(participants, participants$ServiceRole == "Child")
 i <- 1
 for (id in unique(children$IdentificationID)){
   
-  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
   
   i = i+1
 }
@@ -188,6 +197,10 @@ for (id in ML_frame$id){
   date_of_case_child <- filter(cases, cases$InternalCaseID == case_id_of_participant)$CaseOpenDate
   age_of_child <- as.double(as.Date(date_of_case_child)  - as.Date(month_of_birth_child)) / 365
   ML_frame[i,"age_child"] <- round(age_of_child, 1)
+  
+  # Average income in zip code of case
+  zip_income <- round(mean(filter(income, income$zipcode == zip_code)$`A00100`), 0)
+  ML_frame[i, "avg_gross_income_zip"] <- zip_income
   
   i = i+1
 }

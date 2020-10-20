@@ -14,23 +14,36 @@ Data file built in ./R/all_numbers_merge_data.R
 import pandas as pd
 import shap
 import eli5
+import os
 from eli5.sklearn import PermutationImportance
 from sklearn.ensemble import RandomForestRegressor
+from sklearn import preprocessing
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
 
+os.getcwd()
+os.chdir("C:\\Users\\dell\\Documents\\GitHub\\PSF_ERAU")
 
-df = pd.read_csv('../data/ml/ML_frame.csv')
+# Import data
+df = pd.read_csv('./data/ml/ML_frame.csv')
+
+# Normalize df
+min_max_scaler = preprocessing.MinMaxScaler()
+np_scaled = min_max_scaler.fit_transform(df)
+df_norm = pd.DataFrame(np_scaled)
+
+df_norm.columns = df.columns
 
 # Use these rows for prediction:
 features = ['zip', 'zip_count', 'number_participants',
             'case_duration_yrs', 'number_caregivers',
-            'age_child', 'avg_age_caregiver']
-X = df[features]
+            'age_child', 'avg_age_caregiver',
+            'avg_gross_income_zip']
+X = df_norm[features]
 
 # What to predict:
-y = df.number_removals
+y = df_norm.number_removals
 
 # Train/test split
 train_X, val_X, train_y, val_y = train_test_split(X, y, random_state = 0)
