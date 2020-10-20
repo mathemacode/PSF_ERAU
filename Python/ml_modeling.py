@@ -111,14 +111,12 @@ eli5.show_weights(perm, feature_names = val_X.columns.tolist())
 
 #============================================================================#
 
-
-'''  # Figuring out SHAP values
-row_to_show = 5
+# SHAP values
+row_to_show = 1
 data_for_prediction = val_X.iloc[row_to_show]  # use 1 row of data here. Could use multiple rows if desired
 data_for_prediction_array = data_for_prediction.values.reshape(1, -1)
 
-
-#rf_model.predict_proba(data_for_prediction_array)
+rf_model.predict_proba(data_for_prediction_array)
 
 # Create object that can calculate shap values
 explainer = shap.TreeExplainer(rf_model)
@@ -126,9 +124,9 @@ explainer = shap.TreeExplainer(rf_model)
 # Calculate Shap values
 shap_values = explainer.shap_values(data_for_prediction)
 
-shap.summary_plot(shap_values, X, plot_type = 'bar')
+# Error below for some reason?
+# shap.summary_plot(shap_values, X, plot_type = 'bar')
 
 shap.initjs()
 shap.force_plot(explainer.expected_value[1], shap_values[1], data_for_prediction)
 
-'''
