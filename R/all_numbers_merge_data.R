@@ -123,6 +123,10 @@ ML_frame = data.frame(id = double(),
                       avg_gross_income_zip = double(),
                       first_placement = factor(levels=c("1", "2", "3", "4")),
                       multiple_removals = factor(levels=c("1", "0")),
+                      gender = factor(levels=c("0", "1")),
+                      ethnicity = factor(levels=c("0", "1", "2", "3")),
+                      perc_life = double(),
+                      first_place_duration = double(),
                       stringsAsFactors=FALSE) 
 
 
@@ -150,7 +154,7 @@ children <- filter(participants, participants$ServiceRole == "Child")
 i <- 1
 for (id in unique(children$IdentificationID)){
   
-  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
+  ML_frame[i,] <- c(id, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
   
   i = i+1
 }
@@ -243,6 +247,54 @@ for (id in ML_frame$id){
   else {
     ML_frame[i, "multiple_removals"] <- "0"
   }
+  
+  # Gender
+  gender <- filter(participants, participants$IdentificationID == id)$Gender[1]
+  
+  if (isTRUE(gender == "Female")) {
+    gender_num <- 1
+  }
+  else if (isTRUE(gender == "Male")) {
+    gender_num <- 0
+  }
+  else {
+    gender_num <- NA
+  }
+  ML_frame[i, "gender"] <- gender_num
+  
+  # Ethnicity
+  ethnicity <- filter(participants, participants$IdentificationID == id)$Ethnicity[1]
+  if (isTRUE(ethnicity == "African American/Black")) {
+    eth_num <- 3
+  }
+  else if (isTRUE(ethnicity == "Hispanic/Latino")) {
+    eth_num <- 2
+  }
+  else if (isTRUE(ethnicity == "Eastern European")) {
+    eth_num <- 1
+  }
+  else {
+    eth_num <- 0
+  }
+  ML_frame[i, "ethnicity"] <- eth_num
+  
+  
+  # Percent of life in system
+  duration_perc <- ((as.double(case_details$CaseClosedDate - case_details$CaseOpenDate) / 365) / age_of_child)
+  ML_frame[i,"perc_life"] <- round(duration_perc,1)
+  
+  if (is.na(duration_perc)) {
+    duration_perc_sofar <- ((as.double(Sys.Date() - as.Date(case_details$CaseOpenDate)) / 365) / age_of_child)
+    ML_frame[i,"perc_life"] <- round(duration_perc_sofar,1)
+  }
+  
+  # First placement duration (years)
+  first_place_start <- as.Date(filter(placements, placements$IdentificationID == id)$PlacementBeginDate[1])
+  first_place_end <- as.Date(filter(placements, placements$IdentificationID == id)$PlacementEndDate[1])
+  
+  first_place_length <- round(((first_place_end - first_place_start) / 365), 1)
+  
+  ML_frame[i, "first_place_duration"] <- first_place_length
   
   
   i = i+1
