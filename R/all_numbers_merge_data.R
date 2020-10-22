@@ -248,6 +248,7 @@ for (id in ML_frame$id){
     ML_frame[i, "multiple_removals"] <- "0"
   }
   
+  
   # Gender
   gender <- filter(participants, participants$IdentificationID == id)$Gender[1]
   
@@ -261,6 +262,7 @@ for (id in ML_frame$id){
     gender_num <- NA
   }
   ML_frame[i, "gender"] <- gender_num
+  
   
   # Ethnicity
   ethnicity <- filter(participants, participants$IdentificationID == id)$Ethnicity[1]
@@ -288,17 +290,17 @@ for (id in ML_frame$id){
     ML_frame[i,"perc_life"] <- round(duration_perc_sofar,1)
   }
   
+  
   # First placement duration (years)
   first_place_start <- as.Date(filter(placements, placements$IdentificationID == id)$PlacementBeginDate[1])
   first_place_end <- as.Date(filter(placements, placements$IdentificationID == id)$PlacementEndDate[1])
-  
   first_place_length <- round(((first_place_end - first_place_start) / 365), 1)
-  
   ML_frame[i, "first_place_duration"] <- first_place_length
   
   
   i = i+1
 }
+
 
 # Remove any records missing removals or placements
 ML_frame <- filter(ML_frame, ML_frame$number_removals > 0)
