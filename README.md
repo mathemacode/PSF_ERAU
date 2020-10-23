@@ -41,7 +41,9 @@
  
  ## Model Accuracy
  So far I have achieved accuracies above 80% (overall) to classify a child as 0 (no risk of multiple removals), or
- 1 (multiple removals expected).  Both the Random Forest and XGBoost can be tuned to achieve 80+%.
+ 1 (multiple removals expected).  Both the Random Forest and XGBoost can be tuned to achieve 80+%.  There is currently 
+ a loop running in the Jupyter Notebook which finds the most accurate parameters for the Random Forest model. 
+ Although it takes some additional time to compute, the models make the best possible predictions.
  
  ![RF_model_stats](./pics/RF_model_stats.PNG)
  
