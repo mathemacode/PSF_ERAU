@@ -1,13 +1,10 @@
 # PSF ERAU Foster Care Project
- More ML modeling of PSF data, and building a PostgreSQL database for PSF data, ingestion, querying, etc.
+ More ML modeling of PSF data, and development of an app for child risk predictions based on case data.
  
- ## Main idea
- The original focus of continuing this project was to build a SQL database to query
- the records, then to create subsets / tables for specific ML models that could be exported and
- analysis continued in Python or R.  This is a continuation of the PSF project documented in
+ This is a continuation of the PSF project documented in
  [the FosterCare_Proj repository](https://github.com/mathemacode/FosterCare_Project).
  
- However, after working with the data I decided to take a more narrowed approach in building 
+ After working with the data a lot I decided to take a more narrowed approach in building 
  a classification model to predict "circular" cases of more than 1 removal.  This would mean that 
  the child had been removed multiple times, as opposed to cases that simply have a number of 
  placements (foster home to group home and back, or other).  When originally working with the company 
@@ -16,7 +13,10 @@
  on building accurate classification models that can predict if a child will have more than 1 removal.
  I also want to document this well for future data scientists who want to take on this problem.
  
- ## Update Fall 2020
+ # Machine Learning Models
+ **Overall goal**: a program to enter in case details and output a prediction.  A very basic design is 
+ [at this link](https://www.kaggle.com/daniielo/foster-calculator).
+ 
  There is now an easy way to start building ML models using [this notebook](./Python/ml_modeling.ipynb)), 
  which uses the dataframe output by [this R program](./R/all_numbers_merge_data.R).  **This is not the same 
  file in the original repo despite the name!  It has been heavily modified.**  I also decided to use 
@@ -24,20 +24,20 @@
  to add on an `avg_gross_income_zip` as a feature to model.  In the original project work, I did 
  add in some economic information into the models.  This IRS dataset with ZIP code granularity appeared 
  useful for this analysis.
+ 
+ The Random Forest model that the above notebook creates is saved to a pickle file.  That file can then be 
+ imported and used for future predictions, which is what I am currently developing - an easy system to do this.
 
- ## Getting Started
+ ## Raw data to model-building steps
  1. Manually check `.xlsx` files, edit yearly files of same type to have same number of columns (even if blank)
  2. Add column (manual or R) to Participants, Removals, and Placements for indexes used as Primary Key (only relevant for DB)
  3. Run `combine_export_cases.R` first, then the other three `combine_export______.R` files
- 4. Run `PSF_buildDB.sql` to build the Postgres locally hosted database
- 5. Use `PSF_testQueries.sql` to verify imports worked and as a base for beginning querying
+ 4. Run `all_numbers_merge_data.R`, which outputs the file `ML_frame.csv` into ./data/ml (hidden on this repo)
+ 5. Open `./Python/ml_modeling.ipynb` for some pre-built models (currently Random Forest & XGBoost)
  
  If desired, use `df_PK_test.R` to verify that the PK column of a dataframe in R is, in fact, unique, and
- suitable to be used as a PK.  If not, a `duplicates` table is available for debugging.
- 
- ### To get df ready for ML models after the above steps:
- 1. Run `all_numbers_merge_data.R`, which outputs the file `ML_frame.csv` into ./data/ml (hidden on this repo)
- 2. Open `./Python/ml_modeling.ipynb` for some pre-built models (currently Random Forest & XGBoost)
+ suitable to be used as a PK for unique identification of a case and/pr it's details.  If it's not unique, 
+ a `duplicates` table is available for debugging.
  
  ## Model Accuracy
  So far I have achieved accuracies above 80% (overall) to classify a child as 0 (no risk of multiple removals), or
@@ -46,14 +46,21 @@
  Although it takes some additional time to compute, the models make the best possible predictions.
  
  ![RF_model_stats](./pics/RF_model_stats.PNG)
+
  
- 
- ## SHAP Analysis
+ ## Interpreting SHAP Visualizations
  I am also experimenting with SHAP values to visualize feature influences, and might try to build 
  some partial plots as well, but these so far have been fantastic to visualize why the prediction is 
  the way that it is.
  
- An example of a prediction (probability-ized, note this is not an actual pred) leaning to 0:
+ How it works: the probabilistic model has a baseline prediction (around 0.22 in this case) between 0 and 1,
+ which is the "average" prediction.  When the model looks at the features of a case all at once, it weighs 
+ certain data more than others (for example, in the green chart above, the features at the top more heavily
+ influence this 0 or 1 output, whereas those at the bottom are not as influential).  These plots below with 
+ red and blue are showing how each feature "pushes" the overall prediction in one direction vs. the other
+ (for example, in the direction of 0 instead of 1).
+ 
+ An example of a probabilistic prediction leaning to 0:
  ![shap1](./pics/shap_ex_1.PNG)
  
  Example of very strong evidence for no further removals:
@@ -62,13 +69,6 @@
  Example of very strong evidence for more than 1 removal:
  ![shap3](./pics/shap_ex_3.PNG)
  
- #### Entity-Relationship Diagram
- I will be adding a ParticipantID, RemovalID and PlacementID to use as Primary Keys to this database design.  
- I also added a "RecordYear" column to the Participants files. I have made this ERD specifically for Postgres 
- implementation.  The structure is otherwise unchanged from how it is provided.  If yearly tables that were
- concatenated together were missing columns that the others had, these were added as blank columns to maintain
- a standard throughout.
- 
- If time allows I will also add another table to this design for all the engineered features.
- 
- ![ERD](./docs/PSF_ERD_small.png)
+ With an experienced practitioner in the loop, more analysis could be done to better understand the risk of each
+ child.  The model can only show us which characteristics influenced the prediction the most, and how they 
+ influenced this prediction.
