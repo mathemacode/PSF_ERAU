@@ -120,7 +120,7 @@ ML_frame = data.frame(id = double(),
                       number_caregivers = integer(),
                       age_child = double(),
                       avg_age_caregiver = double(),
-                      avg_gross_income_zip = double(),
+                      med_gross_income_zip = double(),
                       first_placement = factor(levels=c("1", "2", "3", "4")),
                       multiple_removals = factor(levels=c("1", "0")),
                       gender = factor(levels=c("0", "1")),
@@ -216,9 +216,9 @@ for (id in ML_frame$id){
   age_of_child <- as.double(as.Date(date_of_case_child)  - as.Date(month_of_birth_child)) / 365
   ML_frame[i,"age_child"] <- round(age_of_child, 1)
   
-  # Average income in zip code of case
-  zip_income <- round(mean(filter(income, income$zipcode == zip_code)$`A00100`), 0)
-  ML_frame[i, "avg_gross_income_zip"] <- zip_income
+  # Median income in zip code of case
+  zip_income <- round(median(filter(income, income$zipcode == zip_code)$`A00100`), 0)
+  ML_frame[i, "med_gross_income_zip"] <- zip_income
   
   # First case factor
   first_case <- filter(placements, placements$IdentificationID == id)$Service[1]
