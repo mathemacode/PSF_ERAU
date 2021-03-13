@@ -14,7 +14,7 @@ import os
 import pickle
 
 os.getcwd()
-os.chdir("C:\\Users\\dell\\Documents\\GitHub\\PSF_ERAU")
+os.chdir("C:\\Users\\dell_\\Documents\\GitHub\\PSF_ERAU")
 
 # ============================================================= #
 
