@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct 22 18:51:04 2020
-
-Calculator GUI functions for multiple removals prediction.
+Calculator for multiple removals prediction.
 
 """
 
@@ -19,7 +17,7 @@ os.chdir("C:\\Users\\dell_\\Documents\\GitHub\\PSF_ERAU")
 # ============================================================= #
 
 # Working with inputted data
-INPUT_VALUES = pd.Series({'zip_count':                  33.0, 
+INPUT_VALUES = pd.Series({'zip_count':                  33.0,
                             'number_participants':        27.0,
                             'case_duration_yrs':           5.56,
                             'number_caregivers':           13.0,
@@ -39,7 +37,7 @@ INPUT_ARRAY = INPUT_VALUES.values.reshape(1, -1)
 # Open saved model and make prediction
 with open('./Python/saved_rf_model.pkl', 'rb') as file:
     pickle_model = pickle.load(file)
-    
+
 prediction = pickle_model.predict(INPUT_ARRAY)
 
 # ============================================================= #
