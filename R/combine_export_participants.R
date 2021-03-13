@@ -11,14 +11,7 @@ library(dplyr)
 
 # Create empty dataframe
 AllParticipants = data.frame(InternalCaseID=NA,IdentificationID=NA,RecordYear=NA,Gender=NA,Ethnicity=NA,
-                             Hispanic=NA,MonthOfBirth=NA,AdoptionFlag=NA,ServiceRole=NA,LegalStatus=NA,
-                             MaltreaterFlag=NA,FatherTPRFlag=NA,MotherTPRFlag=NA,ResidesAtHomeFlag=NA,
-                             TeenParentFlag=NA,AbandonedFlag=NA,ClinicallyDiagnosedFlag=NA,
-                             MentalRetardationFlag=NA,PhysicallyDisabledFlag=NA,VHImpairedFlag=NA,
-                             EmotionallyDisturbedFlag=NA,SpecialCareFlag=NA,RelinquishmentFlag=NA,
-                             AutismFlag=NA,OrganicBrainDamageFlag=NA,CerebralPalsyFlag=NA,PhysicalBDamageFlag=NA,
-                             DeafnessFlag=NA,PhysLimitFlag=NA,EmotionalDisFlag=NA,PraderFlag=NA,InfirmitiesFlag=NA,
-                             RetardationFlag=NA,MentalIllnessFlag=NA,SpinaFlag=NA,MentalLimitationsFlag=NA)[-1,]
+                             Hispanic=NA,MonthOfBirth=NA,AdoptionFlag=NA,ServiceRole=NA,LegalStatus=NA)[-1,]
 
 # Path of participants files
 path = "~/GitHub/PSF_ERAU/data/xlsx_reviewed/participants"
