@@ -1,13 +1,13 @@
 # Number of unique cases
 length(unique(All_Cases$InternalCaseID))
 
-# Number of unique children
-nrow(filter(All_Participants, All_Participants$ServiceRole == 'Child'))
-#... in ML_frame:
-# count(unique(ML_frame$id))
-
 # Number of unique participants
 length(unique(All_Participants$IdentificationID))
+
+# Number of unique children
+children <- filter(All_Participants, All_Participants$ServiceRole == 'Child')
+length(unique(children$IdentificationID))
+
 
 # Male vs. Female Children Distribution
 nrow(filter(All_Participants, All_Participants$ServiceRole == 'Child' & All_Participants$Gender == 'Male'))
