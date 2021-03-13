@@ -30,49 +30,18 @@ All_Cases <- read_csv("GitHub/PSF_ERAU/data/csv/All_Cases.csv",
                         CaseClosedDate = col_datetime(format = "%Y-%m-%d %H:%M:%S"),
                         CaseOpenDate = col_datetime(format = "%Y-%m-%d %H:%M:%S"),
                         CaseType = col_character(), InternalCaseID = col_integer(),
-                        Region = col_character(), 
                         Zip = col_integer()), 
                       na = "NA")
 
 
 All_Participants <- read_csv("GitHub/PSF_ERAU/data/csv/All_Participants.csv", 
                               col_types = cols(
-                                AbandonedFlag = col_factor(levels = c("Y", "N")), 
-                                AdoptionFlag = col_factor(levels = c("Y", "N")), 
-                                AutismFlag = col_factor(levels = c("Y", "N")), 
-                                CerebralPalsyFlag = col_factor(levels = c("Y", "N")), 
-                                ClinicallyDiagnosedFlag = col_factor(levels = c("Y", "A","N")), 
-                                DeafnessFlag = col_factor(levels = c("Y", "N")), 
-                                EmotionalDisFlag = col_factor(levels = c("Y", "N")), 
-                                EmotionallyDisturbedFlag = col_factor(levels = c("Y", "N")), 
                                 Ethnicity = col_character(), 
-                                FatherTPRFlag = col_factor(levels = c("Y", "N")),
                                 Gender = col_factor(levels = c("Male", "Unknown", "Female")), 
                                 Hispanic = col_character(), 
                                 IdentificationID = col_double(), 
-                                InfirmitiesFlag = col_factor(levels = c("Y", "N")), 
                                 InternalCaseID = col_double(), 
                                 LegalStatus = col_character(), 
-                                MaltreaterFlag = col_factor(levels = c("Y", "N")), 
-                                MentalIllnessFlag = col_factor(levels = c("Y", "N")), 
-                                MentalLimitationsFlag = col_factor(levels = c("Y", "N")),
-                                MentalRetardationFlag = col_factor(levels = c("Y", "N")), 
-                                MonthOfBirth = col_date(format = "%m/%Y"), 
-                                MotherTPRFlag = col_factor(levels = c("Y", "N")), 
-                                OrganicBrainDamageFlag = col_factor(levels = c("Y", "N")), 
-                                PhysLimitFlag = col_factor(levels = c("Y", "N")), 
-                                PhysicalBDamageFlag = col_factor(levels = c("Y", "N")), 
-                                PhysicallyDisabledFlag = col_factor(levels = c("Y", "N")), 
-                                PraderFlag = col_factor(levels = c("Y", "N")), 
-                                RecordYear = col_double(), 
-                                RelinquishmentFlag = col_factor(levels = c("Y", "N")),
-                                ResidesAtHomeFlag = col_factor(levels = c("Y", "N")), 
-                                RetardationFlag = col_factor(levels = c("Y", "N")), 
-                                ServiceRole = col_character(), 
-                                SpecialCareFlag = col_factor(levels = c("Y", "N")), 
-                                SpinaFlag = col_factor(levels = c("Y", "N")), 
-                                TeenParentFlag = col_factor(levels = c("Y", "N")), 
-                                VHImpairedFlag = col_factor(levels = c("Y", "N")), 
                                 X1 = col_double()), 
                              na = "NA")
 
@@ -134,6 +103,7 @@ ML_frame = data.frame(id = double(),
 cases <- filter(All_Cases, All_Cases$`InternalCaseID` %in% All_Placements$`InternalCaseID`)
 cases <- filter(cases, !is.na(cases$Zip))
 participants <- filter(All_Participants, All_Participants$`InternalCaseID` %in% cases$`InternalCaseID`)
+participants <- filter(participants, !(participants$MonthOfBirth == "/"))
 removals <- filter(All_Removals, All_Removals$`InternalCaseID` %in% cases$`InternalCaseID`)
 placements <- filter(All_Placements, All_Placements$`InternalCaseID` %in% cases$`InternalCaseID`)
 income <- filter(IRS_Income, IRS_Income$STATE == "FL")
@@ -207,13 +177,15 @@ for (id in ML_frame$id){
   ML_frame[i,"number_caregivers"] <- num_caregivers
   
   # Average age of caregiver
-  avg_age_caregiver <- (as.double(mean(as.Date(ISOdate(caregivers$RecordYear, 1, 1)) - caregivers$MonthOfBirth))/365)
+  caregiver_bday_years <- as.double(gsub(".*/", "", caregivers$MonthOfBirth))
+  avg_age_caregiver <- (as.double(mean(caregivers$RecordYear - caregiver_bday_years)))
   ML_frame[i,"avg_age_caregiver"] <- round(avg_age_caregiver, 1)
   
   # Age of child
   month_of_birth_child <- filter(participants, participants$IdentificationID == id)$MonthOfBirth[1]
+  estimated_bday_child <- gsub("/", "/01/", month_of_birth_child)
   date_of_case_child <- filter(cases, cases$InternalCaseID == case_id_of_participant)$CaseOpenDate
-  age_of_child <- as.double(as.Date(date_of_case_child)  - as.Date(month_of_birth_child)) / 365
+  age_of_child <- as.double(as.Date(date_of_case_child)  - as.Date(estimated_bday_child, tryFormats = c("%m/%d/%Y"))) / 365
   ML_frame[i,"age_child"] <- round(age_of_child, 1)
   
   # Median income in zip code of case
