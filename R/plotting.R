@@ -36,3 +36,4 @@ mean(table(All_Participants$RecordYear))
 ethn_perc <- sort((sort(table(All_Participants$Ethnicity), decreasing=TRUE)[1:10] / 
                       sum(table(All_Participants$Ethnicity))) * 100, decreasing=TRUE)
 
+as.data.frame(ethn_perc)
